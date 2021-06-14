@@ -1,0 +1,42 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "/home/fra/catkin_ws/devel/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/devel/include/**",
+                "/opt/ros/melodic/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/avatar_control_plugin/include/**",
+                "/home/fra/catkin_ws/src/beginner_tutorials/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/gazebo_dvs_plugin/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/gazebo_grasp_plugin/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/gazebo_ros_pkgs/gazebo_plugins/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/gazebo_ros_pkgs/gazebo_ros/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/gazebo_ros_pkgs/gazebo_ros_control/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/gazebo_ros_muscle_interface/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/gazebo_ros_replay_plugins/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/gazebo_version_helpers/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/generic_controller_plugin/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/husky_gazebo_plugins/include/**",
+                "/home/fra/catkin_ws/src/kuka_iiwa_description/include/**",
+                "/home/fra/catkin_ws/src/kuka_iiwa_gazebo/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/osrf_conveyor/osrf_gear/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/pybullet_ant_plugin/include/**",
+                "/home/fra/catkin_ws/src/srd_exercises/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/tigrillo_plugin/include/**",
+                "/home/fra/Documents/NRP/GazeboRosPackages/src/whiskeye_plugin/include/**",
+                "/usr/include/**"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14",
+            "configurationProvider": "ms-vscode.cmake-tools"
+        }
+    ],
+    "version": 4
+}

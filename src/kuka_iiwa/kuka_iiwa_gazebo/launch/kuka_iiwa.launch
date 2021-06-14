@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Start Gazebo. Same as empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find kuka_iiwa_gazebo)/worlds/kuka_iiwa_reaching.world"/> 
+    <arg name="paused" value="true"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- Spawn a robot into Gazebo -->
+  <arg name="urdf_path" default="$(find kuka_iiwa_description)/urdf/iiwa_gripper.urdf"/>  
+  <param name="robot_description" textfile="$(arg urdf_path)" />
+
+  <group ns="/iiwa">
+
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-file $(find kuka_iiwa_description)/urdf/iiwa_gripper.urdf -urdf -x 0.5 -y -0.0 -z 0.0 -model iiwa_gripper" />
+
+    <!-- Launch RVIZ with a custom configuration -->
+    <!-- <node type="rviz" name="rviz" pkg="rviz" args="-d $(find kuka_iiwa_control)/rviz/my_rviz.rviz" /> -->
+
+  </group>
+
+  <!-- Spawn a iiwa eye into Gazebo -->
+  <arg name="urdf_path2" default="$(find kuka_iiwa_description)/urdf/iiwa_eye.urdf"/>  
+  <param name="eye_description" textfile="$(arg urdf_path)" />
+
+  <group ns="/eye">
+
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-file $(find kuka_iiwa_description)/urdf/iiwa_eye.urdf -urdf -x 1.4 -y -0.33 -z 1.858 -R 3.14159 -P 1.57079 -Y 3.14159 -model iiwa_eye" />
+                                                                                                                                      
+    <!-- Launch RVIZ with a custom configuration -->
+    <!-- <node type="rviz" name="rviz" pkg="rviz" args="-d $(find kuka_iiwa_control)/rviz/my_rviz.rviz" /> -->
+
+  </group>
+
+
+  <!-- Control nodes -->
+  <include file="$(find kuka_iiwa_control)/launch/kuka_iiwa_control.launch"/>
+
+</launch>
