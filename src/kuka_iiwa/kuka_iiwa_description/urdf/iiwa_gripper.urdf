@@ -296,9 +296,9 @@
     <child link="iiwa_link_ee"/>
     <origin rpy="0 0 0" xyz="0 0 0.045"/>
   </joint>
-  <link name="iiwa_link_ee">     </link>
+  <link name="iiwa_link_ee"></link>
 
-   <!-- Enable the Joint Feedback -->
+  <!-- Enable the Joint Feedback -->
   <gazebo reference="iiwa_joint_7">
     <provideFeedback>true</provideFeedback>
   </gazebo>
@@ -523,6 +523,7 @@
       </geometry>
     </collision>
   </link>
+
   <link name="gripper_left_link">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -542,6 +543,26 @@
       </geometry>
     </collision>
   </link>
+
+  <joint name="left_end" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 -0.160"/>
+    <parent link="gripper_left_link"/>
+    <child link="left_cube"/>
+    <axis xyz="0 0 0"/>
+    <!-- <calibration falling="0.0" reference_position="0.0" rising="0.0"/>
+    <dynamics damping="0.117"/> -->
+    <limit effort="0" lower="0.0000010" upper="0.0000011" velocity="0"/>
+  </joint>
+
+  <link name="left_cube">
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+
+
   <link name="gripper_right_link">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -561,6 +582,25 @@
       </geometry>
     </collision>
   </link>
+
+  <joint name="right_end" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 -0.160"/>
+    <parent link="gripper_right_link"/>
+    <child link="right_cube"/>
+    <axis xyz="0 0 0"/>
+    <!-- <calibration falling="0.0" reference_position="0.0" rising="0.0"/>
+    <dynamics damping="0.117"/> -->
+    <limit effort="0" lower="0.0000010" upper="0.0000011" velocity="0"/>
+  </joint>
+
+  <link name="right_cube">
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+
   <transmission name="gripper_tran_left">
     <robotNamespace>/iiwa</robotNamespace>
     <type>transmission_interface/SimpleTransmission</type>

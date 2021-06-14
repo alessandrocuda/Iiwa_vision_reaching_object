@@ -42,7 +42,7 @@
             <!-- numero di volte per secondo in cui un'immagine è presa, può
             essere utile cambiarlo per avere il giusto numero di immagini per la 
             rete neurale -->
-            <update_rate>30.0</update_rate> 
+            <update_rate>1000.0</update_rate> 
             <camera name="head">
                 <horizontal_fov>1.3962634</horizontal_fov>
                 <image>

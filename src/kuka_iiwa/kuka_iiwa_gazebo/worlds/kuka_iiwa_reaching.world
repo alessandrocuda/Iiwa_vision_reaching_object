@@ -125,7 +125,7 @@
           <material>
             <script>
               <uri>file://media/materials/scripts/gazebo.material</uri>
-              <name>Gazebo/Wood</name>
+              <name>Gazebo/White</name>
             </script>
           </material>
         </visual>
