@@ -50,7 +50,7 @@ def get_centre(img):
     #Calculate x,y coordinate of center
     cX = int(M["m10"] / M["m00"])
     cY = int(M["m01"] / M["m00"])
-    return [cX, cY]
+    return np.array([cX, cY]).reshape(1,2)
 
 
 def create_model():
@@ -71,55 +71,60 @@ def create_model_vision():
     model.compile(loss="mean_squared_error", optimizer=adam)
     return model
 
-def move_it(model, model_vision):
+def set_ball():
+    state_msg = ModelState()
 
+    randx = 1 + random.randint(20,50)/100            #basso 1.1 alto 1.7
+    randy = -0.7 + random.randint(0,70)/100          #sinistra 0.3 destra -1
+
+    state_msg.model_name = "unit_sphere"
+    state_msg.pose.position.x = randx
+    state_msg.pose.position.y = randy
+    state_msg.pose.position.z = 1.062500
+
+    set_state = rospy.ServiceProxy(
+        '/gazebo/set_model_state', SetModelState)
+    resp = set_state(state_msg)
+    print(state_msg)
+    print([randx,randy,1.062500])
+
+def get_ball_position():
+    rospy.wait_for_service('/iiwa/utils/get_camera')
+    get_camera_image = rospy.ServiceProxy('/iiwa/utils/get_camera', 
+                                          GetCameraImg)
+    resp = get_camera_image()
+    center = get_centre(resp.camera_image)
+    print("center of the ball: {}".format(center))
+    ball_position = model_vision.predict(center).tolist()[0]
+    print("ball position: ".format(ball_position))
+    return ball_position
+
+def get_trajectory(t_max, init_position, end_position):
+    time_domain, init_time, end_time = np.mgrid[0:t_max:1], 0, t_max-1
+    trajectory = griddata(np.array([init_time, end_time]), 
+                        np.array([init_position, end_position]), 
+                        time_domain, 
+                        method='linear')
+    return trajectory
+
+def send_command(joints_value):
+    command = Float64MultiArray()
+    command.data = joints_value
+    pub.publish(command)
+
+def move_it(model_control, model_vision):
     while not rospy.is_shutdown():
-        state_msg = ModelState()
-
-        randx = 1 + random.randint(20,50)/100            #basso 1.1 alto 1.7
-        randy = -0.7 + random.randint(0,70)/100          #sinistra 0.3 destra -1
-
-        state_msg.model_name = "unit_sphere"
-        state_msg.pose.position.x = randx
-        state_msg.pose.position.y = randy
-        state_msg.pose.position.z = 1.062500
-
-        set_state = rospy.ServiceProxy(
-            '/gazebo/set_model_state', SetModelState)
-        resp = set_state(state_msg)
-        print(state_msg)
-        print([randx,randy,1.062500])
-
+        set_ball()
         rospy.sleep(1)
-
-        rospy.wait_for_service('/iiwa/utils/get_camera')
-        get_camera_image = rospy.ServiceProxy('/iiwa/utils/get_camera', GetCameraImg)
-        resp = get_camera_image()
-        print("center of the ball")
-        resp = get_centre(resp.camera_image)
-        print(resp)
-
-        xyz_final = model_vision.predict(np.array(resp).reshape(1,2)).tolist()[0]
-        print(xyz_final)
-        t_max = 40
-        grid_x = np.mgrid[0:t_max:1]
-        grid_z1 = griddata(np.array([0, t_max-1]), np.array([[0.6966, -0.33,  2.260], [xyz_final[0], xyz_final[1], 1.18]]), grid_x, method='linear')
-
-        for t in range(t_max):
-            joints = model.predict(grid_z1[t].reshape(1,3)).tolist()[0]
-            command = Float64MultiArray()
-            current_joints = joints
-            command.data = current_joints
-            #print(command.data)
-            #rospy.loginfo(command)
-            pub.publish(command)
-
+        ball_position = get_ball_position(model_vision)
+        trajectory = get_trajectory(t_max=40, 
+                                    init_position=[0.6966, -0.33,  2.260], 
+                                    end_position=[ball_position[0], ball_position[1], 1.18])
+        for t in range(trajectory.shape[0]):
+            joints = model_control.predict(trajectory[t].reshape(1,3)).tolist()[0]
+            send_command(joints_value=joints)
         rospy.sleep(2)
-        command = Float64MultiArray()
-        command.data = [0,0,0,0,0,0,0]
-        #print(command.data)
-        #rospy.loginfo(command)
-        pub.publish(command)
+        send_command(joints_value=[0,0,0,0,0,0,0])
         rate.sleep()
 
 if __name__ == "__main__":

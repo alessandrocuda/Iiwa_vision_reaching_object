@@ -78,16 +78,14 @@ def data_collection_callback(data):
         state_msg_l.link_name, state_msg_r.link_name = "iiwa_gripper::left_cube", "iiwa_gripper::right_cube"
         state_msg_l.reference_frame, state_msg_r.reference_frame = '', ''
 
-        set_state_l = rospy.ServiceProxy(
-            '/gazebo/get_link_state', GetLinkState)
+        set_state_l = rospy.ServiceProxy('/gazebo/get_link_state', GetLinkState)
         state_msg_l = set_state_l(state_msg_l.link_name, state_msg_l.reference_frame)
 
-        set_state_r = rospy.ServiceProxy(
-            '/gazebo/get_link_state', GetLinkState)
+        set_state_r = rospy.ServiceProxy('/gazebo/get_link_state', GetLinkState)
         state_msg_r = set_state_r(state_msg_r.link_name, state_msg_r.reference_frame)
 
         x_ee = (state_msg_r.link_state.pose.position.x + state_msg_l.link_state.pose.position.x)/2
-        y_ee= (state_msg_r.link_state.pose.position.y + state_msg_l.link_state.pose.position.y)/2
+        y_ee = (state_msg_r.link_state.pose.position.y + state_msg_l.link_state.pose.position.y)/2
         z_ee = (state_msg_r.link_state.pose.position.z + state_msg_l.link_state.pose.position.z)/2
         print(current_joints)
         print([x_ee, y_ee, z_ee])

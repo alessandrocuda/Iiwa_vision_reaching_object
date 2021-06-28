@@ -14,26 +14,20 @@ def handle_get_img(req):
     return img
 
 def setup_services():
-    #setup al the services
     set_direction = rospy.Service('/iiwa/utils/get_camera', GetCameraImg, handle_get_img) 
-    #rs.spin()
-
 
 def myhook():
     print("shutdown time!")
 
 def data_collection_callback(data):
-    #print(data.velocity)
     global img
     img = data
 
 def data_collection():
-    rospy.init_node('data_collection', anonymous=True)
+    rospy.init_node('camera_data_collection', anonymous=True)
     rospy.Subscriber('/eye/camera/image_raw', Image, data_collection_callback)
     setup_services()
-    rospy.on_shutdown(myhook)
     rospy.spin()
-
 
 if __name__ == '__main__':
     try:
